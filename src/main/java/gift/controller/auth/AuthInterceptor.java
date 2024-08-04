@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.crypto.SecretKey;
+import java.util.Objects;
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
@@ -23,6 +24,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (isPreflightRequest(request)) return true;
         var header = getHeader(request);
         var token = getTokenWithAuthorizationHeader(header);
         var claims = getClaimsWithToken(token);
@@ -57,5 +59,21 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(jwtProperties.secretKey().getBytes());
+    }
+
+    private boolean isPreflightRequest(HttpServletRequest request) {
+        return isOptions(request) && hasHeaders(request) && hasMethod(request);
+    }
+
+    private boolean isOptions(HttpServletRequest request) {
+        return request.getMethod().equals("OPTIONS");
+    }
+
+    private boolean hasHeaders(HttpServletRequest request) {
+        return Objects.nonNull(request.getHeader("Access-Control-Request-Headers"));
+    }
+
+    private boolean hasMethod(HttpServletRequest request) {
+        return Objects.nonNull(request.getHeader("Access-Control-Request-Method"));
     }
 }
