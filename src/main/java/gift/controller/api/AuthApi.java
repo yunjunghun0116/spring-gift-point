@@ -3,7 +3,6 @@ package gift.controller.api;
 import gift.dto.auth.AuthResponse;
 import gift.dto.auth.LoginRequest;
 import gift.dto.auth.RegisterRequest;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,8 +36,5 @@ public interface AuthApi {
             @ApiResponse(responseCode = "401", description = "회원 등록 실패(사유 : 이미 가입된 이메일입니다. )", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<Void> redirectKakaoLogin();
-
-    @Hidden
     ResponseEntity<AuthResponse> loginWithKakaoAuth(String code);
 }
