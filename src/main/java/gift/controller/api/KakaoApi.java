@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "인증 토큰 API")
 public interface KakaoApi {
 
-    @Operation(summary = "카카오 로그인을 통해 회원을 인증하고 토큰을 등록한다.")
+    @Operation(summary = "카카오 로그인을 통해 회원을 인증하고 토큰을 등록한다.", description = "코드를 얻기 위한 Redirect URI : /api/kakao/token")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "토큰 등록 성공"),
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청"),

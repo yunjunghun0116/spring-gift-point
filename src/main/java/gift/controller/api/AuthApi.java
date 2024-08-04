@@ -31,7 +31,7 @@ public interface AuthApi {
     })
     ResponseEntity<AuthResponse> login(LoginRequest loginRequest);
 
-    @Operation(summary = "카카오 로그인을 통해 회원을 인증하고 토큰을 받는다.")
+    @Operation(summary = "카카오 로그인을 통해 회원을 인증하고 토큰을 받는다.", description = "코드를 얻기 위한 Redirect URI : /api/members/login/kakao")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = AuthResponse.class))),
             @ApiResponse(responseCode = "401", description = "회원 등록 실패(사유 : 이미 가입된 이메일입니다. )", content = @Content(schema = @Schema(hidden = true))),
