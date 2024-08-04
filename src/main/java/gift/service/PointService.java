@@ -31,6 +31,7 @@ public class PointService {
         memberRepository.save(member);
     }
 
+    @Transactional(readOnly = true)
     public PointResponse getPoint(Long memberId) {
         var member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundElementException(memberId + "를 가진 이용자가 존재하지 않습니다."));
