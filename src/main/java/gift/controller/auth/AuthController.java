@@ -4,13 +4,14 @@ import gift.controller.api.AuthApi;
 import gift.dto.auth.AuthResponse;
 import gift.dto.auth.LoginRequest;
 import gift.dto.auth.RegisterRequest;
-import gift.dto.kakao.KakaoAuthRequest;
 import gift.service.auth.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,9 +36,9 @@ public class AuthController implements AuthApi {
         return ResponseEntity.ok(auth);
     }
 
-    @PostMapping("/login/kakao")
-    public ResponseEntity<AuthResponse> loginWithKakaoAuth(@RequestBody KakaoAuthRequest request) {
-        var auth = authService.loginWithKakaoAuth(request.code());
+    @GetMapping("/login/kakao")
+    public ResponseEntity<AuthResponse> loginWithKakaoAuth(@RequestParam String code) {
+        var auth = authService.loginWithKakaoAuth(code);
         return ResponseEntity.ok(auth);
     }
 }

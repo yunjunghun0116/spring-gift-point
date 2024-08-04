@@ -1,13 +1,12 @@
 package gift.controller;
 
 import gift.controller.api.KakaoApi;
-import gift.dto.kakao.KakaoAuthRequest;
 import gift.service.KakaoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,9 +19,9 @@ public class KakaoController implements KakaoApi {
         this.kakaoService = kakaoService;
     }
 
-    @PostMapping("/token")
-    public ResponseEntity<Void> setToken(@RequestBody KakaoAuthRequest request, @RequestAttribute("memberId") Long memberId) {
-        kakaoService.saveKakaoToken(memberId, request.code());
+    @GetMapping("/token")
+    public ResponseEntity<Void> setToken(@RequestParam String code, @RequestAttribute("memberId") Long memberId) {
+        kakaoService.saveKakaoToken(memberId, code);
         return ResponseEntity.noContent().build();
     }
 }

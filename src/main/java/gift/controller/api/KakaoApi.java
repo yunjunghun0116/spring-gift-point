@@ -1,6 +1,5 @@
 package gift.controller.api;
 
-import gift.dto.kakao.KakaoAuthRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,5 +16,5 @@ public interface KakaoApi {
             @ApiResponse(responseCode = "404", description = "토큰 등록 실패(사유 : 존재하지 않는 이용자 정보입니다.)"),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
-    ResponseEntity<Void> setToken(KakaoAuthRequest request, Long memberId);
+    ResponseEntity<Void> setToken(String code, Long memberId);
 }
