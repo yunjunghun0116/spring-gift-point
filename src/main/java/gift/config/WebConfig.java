@@ -30,7 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000", "http://localhost:8080", "https://kauth.kakao.com", "https://kapi.kakao.com")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .exposedHeaders("Authorization", "Location")
+                .exposedHeaders("Location")
                 .allowCredentials(true)
                 .maxAge(3600);
     }
