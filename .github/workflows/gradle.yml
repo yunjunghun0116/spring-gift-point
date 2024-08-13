@@ -33,6 +33,9 @@ jobs:
       - name: gradlew 권한 추가
         run: chmod +x gradlew
 
+      - name: gradlew 초기화
+        run: ./gradlew clean
+
       - name: 빌드 작업
         run: ./gradlew build
 
