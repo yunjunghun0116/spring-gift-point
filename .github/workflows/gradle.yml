@@ -50,14 +50,11 @@ jobs:
         run: |
           echo "$SSH_KEY" > key.pem
           chmod 400 key.pem
+          scp -o StrictHostKeyChecking=no -i key.pem build/libs/*.jar $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-execute/
           scp -o StrictHostKeyChecking=no -i key.pem ./src/main/resources/application.properties $DEPLOY_USER@$DEPLOY_SERVER:~/spring-gift-point/src/main/resources/application.properties
-          ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=30 -i key.pem $DEPLOY_USER@$DEPLOY_SERVER "
+          ssh -o StrictHostKeyChecking=no -i key.pem $DEPLOY_USER@$DEPLOY_SERVER "
             sudo lsof -t -i:8080 | xargs -r sudo kill -9
-            cd ~/spring-gift-point
-            git pull upstream yunjunghun0116  
-            ./gradlew bootJar
-            cd build/libs
-            nohup java -jar spring-gift-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
+            nohup java -jar ~/spring-gift-execute/spring-gift-0.0.1-SNAPSHOT.jar > /dev/null 2>&1 &
             exit  
           " && echo "스프링 프로젝트가 서버에서 정상적으로 돌아가고 있습니다."
 
