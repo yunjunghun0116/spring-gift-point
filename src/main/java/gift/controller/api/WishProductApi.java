@@ -21,7 +21,7 @@ public interface WishProductApi {
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<WishProductResponse> addWishProduct(WishProductRequest wishProductRequest, Long memberId);
+    ResponseEntity<WishProductResponse> addWishProduct(WishProductRequest wishProductRequest);
 
     @Operation(summary = "회원의 특정 위시 리스트를 조회한다.")
     @ApiResponses(value = {
@@ -30,7 +30,7 @@ public interface WishProductApi {
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<WishProductResponse> getWishProduct(Long memberId, Long id);
+    ResponseEntity<WishProductResponse> getWishProduct(Long id);
 
     @Operation(summary = "회원의 위시 리스트에 있는 상품을 페이지 단위로 조회한다.")
     @ApiResponses(value = {
@@ -38,7 +38,7 @@ public interface WishProductApi {
             @ApiResponse(responseCode = "401", description = "허용되지 않는 요청", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류", content = @Content(schema = @Schema(hidden = true)))
     })
-    ResponseEntity<WishProductPageResponse> getWishProducts(Long memberId, Pageable pageable);
+    ResponseEntity<WishProductPageResponse> getWishProducts(Pageable pageable);
 
     @Operation(summary = "회원의 위시 리스트에서 상품을 삭제한다.")
     @ApiResponses(value = {

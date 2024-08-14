@@ -1,6 +1,5 @@
 package gift.service.auth;
 
-import gift.config.properties.JwtProperties;
 import gift.dto.auth.AuthResponse;
 import gift.dto.auth.LoginRequest;
 import gift.dto.auth.RegisterRequest;
@@ -12,26 +11,18 @@ import gift.model.Member;
 import gift.model.OauthType;
 import gift.repository.MemberRepository;
 import gift.service.KakaoService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AuthService {
 
     private final MemberRepository memberRepository;
     private final KakaoService kakaoService;
-    private final JwtProperties jwtProperties;
-
-    public AuthService(MemberRepository memberRepository, KakaoService kakaoService, JwtProperties jwtProperties) {
-        this.memberRepository = memberRepository;
-        this.kakaoService = kakaoService;
-        this.jwtProperties = jwtProperties;
-    }
+    private final JwtProvider jwtProvider;
 
     public AuthResponse register(RegisterRequest registerRequest) {
         var member = saveMemberWithMemberRequest(registerRequest);
@@ -55,13 +46,7 @@ public class AuthService {
     }
 
     private AuthResponse createAuthResponseWithMember(Member member) {
-        var token = Jwts.builder()
-                .subject(member.getId().toString())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtProperties.expiredTime()))
-                .signWith(Keys.hmacShaKeyFor(jwtProperties.secretKey().getBytes()))
-                .compact();
-        return AuthResponse.of(token);
+        return AuthResponse.of(jwtProvider.generateToken(member));
     }
 
     private void emailValidation(String email) {

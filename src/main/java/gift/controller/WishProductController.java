@@ -10,11 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,19 +32,22 @@ public class WishProductController implements WishProductApi {
     }
 
     @PostMapping
-    public ResponseEntity<WishProductResponse> addWishProduct(@Valid @RequestBody WishProductRequest wishProductRequest, @RequestAttribute("memberId") Long memberId) {
+    public ResponseEntity<WishProductResponse> addWishProduct(@Valid @RequestBody WishProductRequest wishProductRequest) {
+        var memberId = getMemberId();
         var wishProduct = wishProductService.addWishProduct(wishProductRequest, memberId);
         return ResponseEntity.created(URI.create("/api/wishes/" + wishProduct.id())).body(wishProduct);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WishProductResponse> getWishProduct(@RequestAttribute("memberId") Long memberId, @PathVariable Long id) {
+    public ResponseEntity<WishProductResponse> getWishProduct(@PathVariable Long id) {
+        var memberId = getMemberId();
         var wishProduct = wishProductService.getWishProduct(memberId, id);
         return ResponseEntity.ok(wishProduct);
     }
 
     @GetMapping
-    public ResponseEntity<WishProductPageResponse> getWishProducts(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<WishProductPageResponse> getWishProducts(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        var memberId = getMemberId();
         var wishProducts = wishProductService.getWishProducts(memberId, pageable);
         return ResponseEntity.ok(wishProducts);
     }
@@ -53,5 +56,11 @@ public class WishProductController implements WishProductApi {
     public ResponseEntity<Void> deleteWishProduct(@PathVariable Long id) {
         wishProductService.deleteWishProduct(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private Long getMemberId() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var principal = auth.getPrincipal().toString();
+        return Long.parseLong(principal);
     }
 }

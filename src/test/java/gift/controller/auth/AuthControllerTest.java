@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.auth.LoginRequest;
 import gift.dto.auth.RegisterRequest;
 import gift.exception.ExceptionResponse;
-import gift.reflection.AuthTestReflectionComponent;
 import gift.service.MemberService;
 import gift.service.auth.AuthService;
+import gift.service.auth.JwtProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class AuthControllerTest {
     @Autowired
     private AuthService authService;
     @Autowired
-    private AuthTestReflectionComponent authTestReflectionComponent;
+    private JwtProvider jwtProvider;
 
     @Test
     @DisplayName("허용되지 않는 형식의 이메일로 회원가입 요청하기")
@@ -113,7 +113,7 @@ class AuthControllerTest {
         Assertions.assertThat(response.status()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         Assertions.assertThat(response.message()).isEqualTo("로그인 정보가 유효하지 않습니다.");
 
-        memberService.deleteMember(authTestReflectionComponent.getMemberIdWithToken(auth.token()));
+        memberService.deleteMember(jwtProvider.getMemberIdWithToken(auth.token()));
     }
 
     @Test
@@ -129,7 +129,7 @@ class AuthControllerTest {
         //then
         login.andExpect(status().isOk());
 
-        memberService.deleteMember(authTestReflectionComponent.getMemberIdWithToken(auth.token()));
+        memberService.deleteMember(jwtProvider.getMemberIdWithToken(auth.token()));
     }
 
     private ExceptionResponse getResponseMessage(MvcResult result) throws Exception {

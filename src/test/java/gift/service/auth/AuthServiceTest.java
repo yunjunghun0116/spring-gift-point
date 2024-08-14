@@ -11,7 +11,6 @@ import gift.exception.InvalidLoginInfoException;
 import gift.model.Member;
 import gift.model.OauthToken;
 import gift.model.OauthType;
-import gift.reflection.AuthTestReflectionComponent;
 import gift.repository.MemberRepository;
 import gift.service.KakaoService;
 import gift.service.MemberService;
@@ -38,12 +37,12 @@ class AuthServiceTest {
     @Autowired
     private MemberService memberService;
     @Autowired
-    private AuthTestReflectionComponent authTestReflectionComponent;
+    private JwtProvider jwtProvider;
     private KakaoService kakaoService = Mockito.mock(KakaoService.class);
 
     @BeforeEach
     void mockKakaoServiceSetUp() {
-        authService = new AuthService(memberRepository, kakaoService, jwtProperties);
+        authService = new AuthService(memberRepository, kakaoService, jwtProvider);
         Mockito.doNothing().when(kakaoService).saveKakaoToken(any(Long.class), any(String.class));
         Mockito.doNothing().when(kakaoService).sendOrderResponseWithKakaoMessage(any(Long.class), any(GiftOrderResponse.class));
         Mockito.doNothing().when(kakaoService).deleteByMemberId(any(Long.class));
@@ -67,7 +66,7 @@ class AuthServiceTest {
         //given
         var registerRequest = new RegisterRequest("test@naver.com", "testPassword");
         var auth = authService.register(registerRequest);
-        var id = authTestReflectionComponent.getMemberIdWithToken(auth.token());
+        var id = jwtProvider.getMemberIdWithToken(auth.token());
         //when, then
         Assertions.assertThatThrownBy(() -> authService.register(registerRequest)).isInstanceOf(DuplicatedEmailException.class);
 
@@ -84,8 +83,8 @@ class AuthServiceTest {
         //when
         var loginAuth = authService.login(loginRequest);
         //then
-        var id = authTestReflectionComponent.getMemberIdWithToken(auth.token());
-        var loginId = authTestReflectionComponent.getMemberIdWithToken(loginAuth.token());
+        var id = jwtProvider.getMemberIdWithToken(auth.token());
+        var loginId = jwtProvider.getMemberIdWithToken(loginAuth.token());
         Assertions.assertThat(id).isEqualTo(loginId);
 
         memberService.deleteMember(id);
@@ -101,7 +100,7 @@ class AuthServiceTest {
         //when, then
         Assertions.assertThatThrownBy(() -> authService.login(loginRequest)).isInstanceOf(InvalidLoginInfoException.class);
 
-        var id = authTestReflectionComponent.getMemberIdWithToken(auth.token());
+        var id = jwtProvider.getMemberIdWithToken(auth.token());
         memberService.deleteMember(id);
     }
 
@@ -113,7 +112,7 @@ class AuthServiceTest {
         //when
         var auth = authService.loginWithKakaoAuth(code);
         //then
-        var id = authTestReflectionComponent.getMemberIdWithToken(auth.token());
+        var id = jwtProvider.getMemberIdWithToken(auth.token());
 
         Assertions.assertThat(id).isNotNull();
 
@@ -130,7 +129,7 @@ class AuthServiceTest {
         //when, then
         Assertions.assertThatThrownBy(() -> authService.loginWithKakaoAuth(code)).isInstanceOf(DuplicatedEmailException.class);
 
-        var id = authTestReflectionComponent.getMemberIdWithToken(auth.token());
+        var id = jwtProvider.getMemberIdWithToken(auth.token());
         memberService.deleteMember(id);
     }
 
@@ -140,7 +139,7 @@ class AuthServiceTest {
         //given
         var code = "인가코드";
         var auth = authService.loginWithKakaoAuth(code);
-        var memberId = authTestReflectionComponent.getMemberIdWithToken(auth.token());
+        var memberId = jwtProvider.getMemberIdWithToken(auth.token());
         var registerRequest = new RegisterRequest("MOCK@naver.com", "testPassword");
         //when, then
         Assertions.assertThatThrownBy(() -> authService.register(registerRequest)).isInstanceOf(DuplicatedEmailException.class);
@@ -154,10 +153,10 @@ class AuthServiceTest {
         //given
         var code = "인가코드";
         var auth = authService.loginWithKakaoAuth(code);
-        var memberId = authTestReflectionComponent.getMemberIdWithToken(auth.token());
+        var memberId = jwtProvider.getMemberIdWithToken(auth.token());
         //when
         var loginAuth = authService.loginWithKakaoAuth(code);
-        var loginMemberId = authTestReflectionComponent.getMemberIdWithToken(loginAuth.token());
+        var loginMemberId = jwtProvider.getMemberIdWithToken(loginAuth.token());
 
         Assertions.assertThat(memberId).isEqualTo(loginMemberId);
 

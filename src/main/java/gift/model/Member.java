@@ -4,13 +4,17 @@ import gift.exception.GiftOrderException;
 import gift.exception.InvalidLoginInfoException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "member")
+@Getter
 @SQLDelete(sql = "update member set deleted = true where id = ?")
 @SQLRestriction("deleted is false")
 public class Member extends BaseEntity {
@@ -23,6 +27,10 @@ public class Member extends BaseEntity {
     @NotNull
     @Column(name = "point")
     private Integer point = 0;
+    @NotNull
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "member_role")
+    private MemberRole memberRole = MemberRole.MEMBER;
     @NotNull
     @Column(name = "deleted")
     private Boolean deleted = Boolean.FALSE;
@@ -38,14 +46,6 @@ public class Member extends BaseEntity {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Integer getPoint() {
-        return point;
     }
 
     public void passwordCheck(String inputPassword) {

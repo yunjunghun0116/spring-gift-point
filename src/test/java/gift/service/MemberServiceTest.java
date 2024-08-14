@@ -3,8 +3,8 @@ package gift.service;
 import gift.dto.auth.LoginRequest;
 import gift.dto.auth.RegisterRequest;
 import gift.exception.InvalidLoginInfoException;
-import gift.reflection.AuthTestReflectionComponent;
 import gift.service.auth.AuthService;
+import gift.service.auth.JwtProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class MemberServiceTest {
     @Autowired
     private MemberService memberService;
     @Autowired
-    private AuthTestReflectionComponent authTestReflectionComponent;
+    private JwtProvider jwtProvider;
 
     @Test
     @DisplayName("회원 탈퇴하기 - 성공")
@@ -31,7 +31,7 @@ public class MemberServiceTest {
         var loginRequest = new LoginRequest("test@naver.com", "testPassword");
         authService.register(registerRequest);
         var loginAuth = authService.login(loginRequest);
-        var id = authTestReflectionComponent.getMemberIdWithToken(loginAuth.token());
+        var id = jwtProvider.getMemberIdWithToken(loginAuth.token());
         //when
         memberService.deleteMember(id);
         //then

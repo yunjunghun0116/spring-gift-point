@@ -12,11 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +38,8 @@ public class GiftOrderController implements GiftOrderApi {
     }
 
     @PostMapping
-    public ResponseEntity<GiftOrderResponse> orderOption(@RequestAttribute("memberId") Long memberId, @Valid @RequestBody GiftOrderRequest giftOrderRequest) {
+    public ResponseEntity<GiftOrderResponse> orderOption(@Valid @RequestBody GiftOrderRequest giftOrderRequest) {
+        var memberId = getMemberId();
         var order = optionService.orderOption(memberId, giftOrderRequest);
         kakaoService.sendOrderResponseWithKakaoMessage(memberId, order);
         return ResponseEntity.created(URI.create("/api/orders/" + order.id())).body(order);
@@ -51,7 +52,8 @@ public class GiftOrderController implements GiftOrderApi {
     }
 
     @GetMapping
-    public ResponseEntity<GiftOrderPageResponse> getOrders(@RequestAttribute("memberId") Long memberId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<GiftOrderPageResponse> getOrders(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        var memberId = getMemberId();
         var orders = giftOrderService.getGiftOrders(memberId, pageable);
         return ResponseEntity.ok(orders);
     }
@@ -60,5 +62,11 @@ public class GiftOrderController implements GiftOrderApi {
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         giftOrderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private Long getMemberId() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var principal = auth.getPrincipal().toString();
+        return Long.parseLong(principal);
     }
 }

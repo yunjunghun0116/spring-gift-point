@@ -16,5 +16,5 @@ public interface MemberApi {
             @ApiResponse(responseCode = "404", description = "회원 탈퇴 실패(사유 : 존재하지 않는 ID 입니다.)"),
             @ApiResponse(responseCode = "500", description = "내부 서버의 오류")
     })
-    ResponseEntity<Void> deleteMember(Long memberId);
+    ResponseEntity<Void> deleteMember();
 }
