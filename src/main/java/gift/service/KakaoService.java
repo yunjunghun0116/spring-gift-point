@@ -12,24 +12,19 @@ import gift.model.OauthToken;
 import gift.model.OauthType;
 import gift.repository.MemberRepository;
 import gift.repository.OauthTokenRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class KakaoService {
 
     private final MemberRepository memberRepository;
     private final OauthTokenRepository oauthTokenRepository;
     private final KakaoApiClient kakaoApiClient;
     private final KakaoProperties kakaoProperties;
-
-    public KakaoService(MemberRepository memberRepository, OauthTokenRepository oauthTokenRepository, KakaoApiClient kakaoApiClient, KakaoProperties kakaoProperties) {
-        this.memberRepository = memberRepository;
-        this.oauthTokenRepository = oauthTokenRepository;
-        this.kakaoApiClient = kakaoApiClient;
-        this.kakaoProperties = kakaoProperties;
-    }
 
     public KakaoTokenResponse getKakaoTokenResponse(String code) {
         return kakaoApiClient.getTokenResponse(code, kakaoProperties.redirectUri());

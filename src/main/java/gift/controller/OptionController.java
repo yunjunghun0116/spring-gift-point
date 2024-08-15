@@ -5,6 +5,7 @@ import gift.dto.option.OptionRequest;
 import gift.dto.option.OptionResponse;
 import gift.service.OptionService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +21,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products/{productId}/options")
+@RequiredArgsConstructor
 public class OptionController implements OptionApi {
 
     private final OptionService optionService;
-
-    public OptionController(OptionService optionService) {
-        this.optionService = optionService;
-    }
 
     @PostMapping
     public ResponseEntity<OptionResponse> addOption(@PathVariable Long productId, @Valid @RequestBody OptionRequest optionRequest) {

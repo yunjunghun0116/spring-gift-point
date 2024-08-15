@@ -11,6 +11,7 @@ import gift.model.Option;
 import gift.model.Product;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +19,12 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class OptionService {
 
     private final OptionRepository optionRepository;
     private final ProductRepository productRepository;
     private final GiftOrderService giftOrderService;
-
-    public OptionService(OptionRepository optionRepository, ProductRepository productRepository, GiftOrderService giftOrderService) {
-        this.optionRepository = optionRepository;
-        this.productRepository = productRepository;
-        this.giftOrderService = giftOrderService;
-    }
 
     public OptionResponse addOption(Long productId, OptionRequest optionRequest) {
         optionNameValidation(productId, optionRequest.name());

@@ -2,11 +2,11 @@ package gift.controller;
 
 import gift.controller.api.ProductApi;
 import gift.dto.product.ProductAddRequest;
-import gift.dto.product.ProductPageResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.ProductUpdateRequest;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,16 +22,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
+@RequiredArgsConstructor
 public class ProductController implements ProductApi {
 
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @PostMapping
     public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductAddRequest productAddRequest) {
@@ -52,7 +50,7 @@ public class ProductController implements ProductApi {
     }
 
     @GetMapping
-    public ResponseEntity<ProductPageResponse> getProducts(@RequestParam(required = false) Long categoryId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<List<ProductResponse>> getProducts(@RequestParam(required = false) Long categoryId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         if (categoryId == null) {
             var products = productService.getProducts(pageable);
             return ResponseEntity.ok(products);

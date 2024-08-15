@@ -26,8 +26,7 @@ public class JwtProvider {
     }
 
     public Long getMemberIdWithToken(String jwt) {
-        var claims = decryptToken(jwt);
-        return Long.parseLong(claims.getSubject());
+        return Long.parseLong(decryptToken(jwt).getSubject());
     }
 
     private Claims decryptToken(String jwt) {

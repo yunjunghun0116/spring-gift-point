@@ -102,9 +102,9 @@ class WishProductControllerTest {
         var managerWishLength = managerWishResult.getResponse().getContentLength();
         Assertions.assertThat(managerWishLength).isEqualTo(0);
         var memberWishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 10));
-        Assertions.assertThat(memberWishProducts.content().size()).isEqualTo(2);
+        Assertions.assertThat(memberWishProducts.size()).isEqualTo(2);
 
-        deleteWishProducts(memberWishProducts.content());
+        deleteWishProducts(memberWishProducts);
     }
 
     @Test

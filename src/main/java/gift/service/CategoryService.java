@@ -6,6 +6,7 @@ import gift.exception.DuplicatedNameException;
 import gift.exception.NotFoundElementException;
 import gift.model.Category;
 import gift.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,15 +14,11 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final ProductService productService;
-
-    public CategoryService(CategoryRepository categoryRepository, ProductService productService) {
-        this.categoryRepository = categoryRepository;
-        this.productService = productService;
-    }
 
     public CategoryResponse addCategory(CategoryRequest categoryRequest) {
         categoryNameValidation(categoryRequest.name());

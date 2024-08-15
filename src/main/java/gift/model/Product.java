@@ -7,11 +7,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "product")
+@Getter
 @SQLDelete(sql = "update product set deleted = true where id = ?")
 @SQLRestriction("deleted is false")
 public class Product extends BaseEntity {
@@ -30,6 +33,7 @@ public class Product extends BaseEntity {
     private Category category;
     @NotNull
     @Column(name = "deleted")
+    @Getter(AccessLevel.NONE)
     private Boolean deleted = Boolean.FALSE;
 
     protected Product() {
@@ -40,22 +44,6 @@ public class Product extends BaseEntity {
         this.price = price;
         this.imageUrl = imageUrl;
         this.category = category;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public Category getCategory() {
-        return category;
     }
 
     public void updateProductInfo(String name, Integer price, String imageUrl) {

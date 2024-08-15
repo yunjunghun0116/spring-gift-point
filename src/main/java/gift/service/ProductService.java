@@ -3,7 +3,6 @@ package gift.service;
 import gift.dto.category.CategoryResponse;
 import gift.dto.option.OptionRequest;
 import gift.dto.product.ProductAddRequest;
-import gift.dto.product.ProductPageResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.ProductUpdateRequest;
 import gift.exception.InvalidProductNameWithKAKAOException;
@@ -12,6 +11,7 @@ import gift.model.Category;
 import gift.model.Product;
 import gift.repository.CategoryRepository;
 import gift.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,19 +20,13 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final WishProductService wishProductService;
     private final OptionService optionService;
-
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, WishProductService wishProductService, OptionService optionService) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-        this.wishProductService = wishProductService;
-        this.optionService = optionService;
-    }
 
     public ProductResponse addProduct(ProductAddRequest productAddRequest) {
         productNameValidation(productAddRequest.name());
@@ -54,26 +48,19 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductPageResponse getProducts(Pageable pageable) {
-        var pageResult = productRepository.findAll(pageable);
-        var products = pageResult
-                .getContent()
+    public List<ProductResponse> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
                 .stream()
                 .map(this::getProductResponseFromProduct)
                 .toList();
-        return new ProductPageResponse(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), products);
     }
 
     @Transactional(readOnly = true)
-    public ProductPageResponse getProducts(Long categoryId, Pageable pageable) {
-        var pageResult = productRepository.findAllByCategoryId(categoryId, pageable);
-        var products = pageResult
-                .getContent()
+    public List<ProductResponse> getProducts(Long categoryId, Pageable pageable) {
+        return productRepository.findAllByCategoryId(categoryId, pageable)
                 .stream()
                 .map(this::getProductResponseFromProduct)
                 .toList();
-
-        return new ProductPageResponse(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), products);
     }
 
     public void deleteProduct(Long productId) {

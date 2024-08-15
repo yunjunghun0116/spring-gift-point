@@ -7,11 +7,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "gift_order")
+@Getter
 @SQLDelete(sql = "update gift_order set deleted = true where id = ?")
 @SQLRestriction("deleted is false")
 public class GiftOrder extends BaseEntity {
@@ -32,25 +35,10 @@ public class GiftOrder extends BaseEntity {
     private String message;
     @NotNull
     @Column(name = "deleted")
+    @Getter(AccessLevel.NONE)
     private Boolean deleted = Boolean.FALSE;
 
     protected GiftOrder() {
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public Option getOption() {
-        return option;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     public GiftOrder(Member member, Option option, Integer quantity, String message) {

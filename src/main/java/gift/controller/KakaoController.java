@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.controller.api.KakaoApi;
 import gift.service.KakaoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/kakao")
+@RequiredArgsConstructor
 public class KakaoController implements KakaoApi {
 
     private final KakaoService kakaoService;
-
-    public KakaoController(KakaoService kakaoService) {
-        this.kakaoService = kakaoService;
-    }
 
     @GetMapping("/token")
     public ResponseEntity<Void> setToken(@RequestParam String code) {

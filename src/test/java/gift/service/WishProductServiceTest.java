@@ -23,11 +23,11 @@ class WishProductServiceTest {
     void successAddWishProduct() {
         //given
         var wishProductAddRequest = new WishProductRequest(1L);
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).content().size()).isEqualTo(0);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(0);
         //when
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, 1L);
         //then
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).content().size()).isEqualTo(1);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(1);
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
@@ -38,11 +38,11 @@ class WishProductServiceTest {
         //given
         var wishProductAddRequest = new WishProductRequest(1L);
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, 1L);
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).content().size()).isEqualTo(1);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(1);
         //when
         wishProductService.deleteWishProduct(wishProduct.id());
         //then
-        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).content().size()).isEqualTo(0);
+        Assertions.assertThat(wishProductService.getWishProducts(1L, PageRequest.of(0, 10)).size()).isEqualTo(0);
     }
 
     @Test
@@ -56,7 +56,7 @@ class WishProductServiceTest {
         //when
         var memberWishProducts = wishProductService.getWishProducts(2L, PageRequest.of(0, 10));
         //then
-        Assertions.assertThat(memberWishProducts.content().size()).isEqualTo(0);
+        Assertions.assertThat(memberWishProducts.size()).isEqualTo(0);
 
         wishProductService.deleteWishProduct(managerWishProduct1.id());
         wishProductService.deleteWishProduct(managerWishProduct2.id());
@@ -95,7 +95,7 @@ class WishProductServiceTest {
         //when
         var wishProducts = wishProductService.getWishProducts(1L, PageRequest.of(0, 1));
         //then
-        Assertions.assertThat(wishProducts.content().size()).isEqualTo(1);
+        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
 
         wishProductService.deleteWishProduct(wishProduct1.id());
         wishProductService.deleteWishProduct(wishProduct2.id());

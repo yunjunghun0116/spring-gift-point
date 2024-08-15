@@ -1,7 +1,6 @@
 package gift.service;
 
 import gift.dto.product.ProductBasicInformation;
-import gift.dto.wishproduct.WishProductPageResponse;
 import gift.dto.wishproduct.WishProductRequest;
 import gift.dto.wishproduct.WishProductResponse;
 import gift.exception.AlreadyExistsException;
@@ -13,23 +12,21 @@ import gift.model.WishProduct;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class WishProductService {
 
     private final WishProductRepository wishProductRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
-
-    public WishProductService(WishProductRepository wishProductRepository, ProductRepository productRepository, MemberRepository memberRepository) {
-        this.wishProductRepository = wishProductRepository;
-        this.productRepository = productRepository;
-        this.memberRepository = memberRepository;
-    }
 
     public WishProductResponse addWishProduct(WishProductRequest wishProductRequest, Long memberId) {
         var product = productRepository.findById(wishProductRequest.productId())
@@ -53,15 +50,11 @@ public class WishProductService {
     }
 
     @Transactional(readOnly = true)
-    public WishProductPageResponse getWishProducts(Long memberId, Pageable pageable) {
-        var pageResult = wishProductRepository.findAllByMemberId(memberId, pageable);
-        var wishProducts = pageResult
-                .getContent()
+    public List<WishProductResponse> getWishProducts(Long memberId, Pageable pageable) {
+        return wishProductRepository.findAllByMemberId(memberId, pageable)
                 .stream()
                 .map(this::getWishProductResponseFromWishProduct)
                 .toList();
-
-        return new WishProductPageResponse(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), wishProducts);
     }
 
     public void deleteWishProduct(Long wishProductId) {

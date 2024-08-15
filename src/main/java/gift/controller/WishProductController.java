@@ -1,11 +1,11 @@
 package gift.controller;
 
 import gift.controller.api.WishProductApi;
-import gift.dto.wishproduct.WishProductPageResponse;
 import gift.dto.wishproduct.WishProductRequest;
 import gift.dto.wishproduct.WishProductResponse;
 import gift.service.WishProductService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -20,16 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishes")
+@RequiredArgsConstructor
 public class WishProductController implements WishProductApi {
 
     private final WishProductService wishProductService;
-
-    public WishProductController(WishProductService wishProductService) {
-        this.wishProductService = wishProductService;
-    }
 
     @PostMapping
     public ResponseEntity<WishProductResponse> addWishProduct(@Valid @RequestBody WishProductRequest wishProductRequest) {
@@ -46,7 +44,7 @@ public class WishProductController implements WishProductApi {
     }
 
     @GetMapping
-    public ResponseEntity<WishProductPageResponse> getWishProducts(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<List<WishProductResponse>> getWishProducts(@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         var memberId = getMemberId();
         var wishProducts = wishProductService.getWishProducts(memberId, pageable);
         return ResponseEntity.ok(wishProducts);

@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.dto.giftorder.GiftOrderPageResponse;
 import gift.dto.giftorder.GiftOrderRequest;
 import gift.dto.giftorder.GiftOrderResponse;
 import gift.dto.option.OptionResponse;
@@ -14,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -38,15 +39,11 @@ public class GiftOrderService {
     }
 
     @Transactional(readOnly = true)
-    public GiftOrderPageResponse getGiftOrders(Long memberId, Pageable pageable) {
-        var pageResult = giftOrderRepository.findAllByMemberId(memberId, pageable);
-        var orders = pageResult
-                .getContent()
+    public List<GiftOrderResponse> getGiftOrders(Long memberId, Pageable pageable) {
+        return giftOrderRepository.findAllByMemberId(memberId, pageable)
                 .stream()
                 .map(this::getGiftOrderResponseFromGiftOrder)
                 .toList();
-
-        return new GiftOrderPageResponse(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalElements(), pageResult.getTotalPages(), orders);
     }
 
     public void deleteOrder(Long id) {
