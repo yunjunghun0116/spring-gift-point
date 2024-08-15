@@ -10,28 +10,21 @@ import gift.model.GiftOrder;
 import gift.model.Option;
 import gift.repository.GiftOrderRepository;
 import gift.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class GiftOrderService {
 
     private final GiftOrderRepository giftOrderRepository;
     private final MemberRepository memberRepository;
     private final WishProductService wishProductService;
-    private final PointService pointService;
-
-    public GiftOrderService(GiftOrderRepository giftOrderRepository, MemberRepository memberRepository, WishProductService wishProductService, PointService pointService) {
-        this.giftOrderRepository = giftOrderRepository;
-        this.memberRepository = memberRepository;
-        this.wishProductService = wishProductService;
-        this.pointService = pointService;
-    }
 
     public GiftOrderResponse addGiftOrder(Long memberId, Option option, GiftOrderRequest giftOrderRequest) {
-        pointService.subtractPoint(memberId, giftOrderRequest.point());
         var order = saveGiftOrderWithGiftOrderRequest(memberId, option, giftOrderRequest);
         wishProductService.deleteAllByMemberIdAndProductId(memberId, option.getProduct().getId());
         return getGiftOrderResponseFromGiftOrder(order);

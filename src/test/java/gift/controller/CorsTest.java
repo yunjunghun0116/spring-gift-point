@@ -30,7 +30,7 @@ public class CorsTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ORIGIN, "http://localhost:3000")
                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
-                .content(objectMapper.writeValueAsString(new RegisterRequest("corsTest@naver.com", "corsTestPassword")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("test", "corsTest@naver.com", "corsTestPassword")));
         //when
         var result = mockMvc.perform(postRequest);
         //then
@@ -43,7 +43,7 @@ public class CorsTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.ORIGIN, "http://localhost:3001")
                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
-                .content(objectMapper.writeValueAsString(new RegisterRequest("corsTest@naver.com", "corsTestPassword")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("test", "corsTest@naver.com", "corsTestPassword")));
         //when
         var result = mockMvc.perform(postRequest);
         //then

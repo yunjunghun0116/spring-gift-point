@@ -9,10 +9,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @Table(name = "oauth_token")
 public class OauthToken extends BaseEntity {
     @NotNull
@@ -46,18 +48,6 @@ public class OauthToken extends BaseEntity {
         this.accessTokenExpiresIn = accessTokenExpiresIn;
         this.refreshToken = refreshToken;
         this.refreshTokenExpiresIn = refreshTokenExpiresIn;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public Member getMember() {
-        return member;
     }
 
     public void updateToken(String accessToken, Integer accessTokenExpiresIn, String refreshToken, Integer refreshTokenExpiresIn) {

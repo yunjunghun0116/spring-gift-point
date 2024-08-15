@@ -57,12 +57,12 @@ public class AuthService {
 
     private Member saveMemberWithMemberRequest(RegisterRequest registerRequest) {
         emailValidation(registerRequest.email());
-        var member = new Member(registerRequest.email(), registerRequest.password());
+        var member = new Member(registerRequest.name(), registerRequest.email(), registerRequest.password());
         return memberRepository.save(member);
     }
 
     private Member saveMemberWithKakaoAuth(KakaoAuthInformation kakaoAuthInformation) {
-        var member = new Member(kakaoAuthInformation.email(), OauthType.KAKAO);
+        var member = new Member(kakaoAuthInformation.name(), kakaoAuthInformation.email(), OauthType.KAKAO);
         return memberRepository.save(member);
     }
 

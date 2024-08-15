@@ -47,7 +47,7 @@ class AuthServiceTest {
         Mockito.doNothing().when(kakaoService).sendOrderResponseWithKakaoMessage(any(Long.class), any(GiftOrderResponse.class));
         Mockito.doNothing().when(kakaoService).deleteByMemberId(any(Long.class));
 
-        var mockMember = new Member("MOCK@naver.com", OauthType.KAKAO);
+        var mockMember = new Member("test", "MOCK@naver.com", OauthType.KAKAO);
         var mockKakaoTokenResponse = new KakaoTokenResponse("ACCESSTOKEN", 10000, "REFRESHTOKEN", 600000);
         var mockKakaoToken = new OauthToken(mockMember, OauthType.KAKAO, "ACCESSTOKEN", 10000, "REFRESHTOKEN", 600000);
         var mockKakaoAuthInformation = new KakaoAuthInformation("MOCK", "MOCK@naver.com");
@@ -64,7 +64,7 @@ class AuthServiceTest {
     @DisplayName("중복된 이메일로 회원가입 시도하기 - 실패")
     void failRegisterWithDuplicatedEmail() {
         //given
-        var registerRequest = new RegisterRequest("test@naver.com", "testPassword");
+        var registerRequest = new RegisterRequest("test", "test@naver.com", "testPassword");
         var auth = authService.register(registerRequest);
         var id = jwtProvider.getMemberIdWithToken(auth.token());
         //when, then
@@ -77,7 +77,7 @@ class AuthServiceTest {
     @DisplayName("로그인 실행하기 - 성공")
     void successLogin() {
         //given
-        var registerRequest = new RegisterRequest("test@naver.com", "testPassword");
+        var registerRequest = new RegisterRequest("test", "test@naver.com", "testPassword");
         var auth = authService.register(registerRequest);
         var loginRequest = new LoginRequest("test@naver.com", "testPassword");
         //when
@@ -94,7 +94,7 @@ class AuthServiceTest {
     @DisplayName("로그인 실행하기 - 실패")
     void failLoginWithWrongPassword() {
         //given
-        var registerRequest = new RegisterRequest("test@naver.com", "testPasswords");
+        var registerRequest = new RegisterRequest("test", "test@naver.com", "testPasswords");
         var auth = authService.register(registerRequest);
         var loginRequest = new LoginRequest("test@naver.com", "testPassword");
         //when, then
@@ -123,7 +123,7 @@ class AuthServiceTest {
     @DisplayName("카카오 회원가입하기 - 실패")
     void failKakaoRegisterExistsEmail() {
         //given
-        var registerRequest = new RegisterRequest("MOCK@naver.com", "testPassword");
+        var registerRequest = new RegisterRequest("test", "MOCK@naver.com", "testPassword");
         var auth = authService.register(registerRequest);
         var code = "인가코드";
         //when, then
@@ -140,7 +140,7 @@ class AuthServiceTest {
         var code = "인가코드";
         var auth = authService.loginWithKakaoAuth(code);
         var memberId = jwtProvider.getMemberIdWithToken(auth.token());
-        var registerRequest = new RegisterRequest("MOCK@naver.com", "testPassword");
+        var registerRequest = new RegisterRequest("test", "MOCK@naver.com", "testPassword");
         //when, then
         Assertions.assertThatThrownBy(() -> authService.register(registerRequest)).isInstanceOf(DuplicatedEmailException.class);
 

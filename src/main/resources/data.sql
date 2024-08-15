@@ -1,7 +1,7 @@
-insert into member(email, password, member_role, point, deleted)
-values ('member@naver.com', 'password', 'MEMBER', 0, 0);
-insert into member(email, password, member_role, point, deleted)
-values ('admin@naver.com', 'password', 'MEMBER', 0, 0);
+insert into member(name, email, password, member_role, deleted)
+values ('member', 'member@naver.com', 'password', 'MEMBER', 0);
+insert into member(name, email, password, member_role, deleted)
+values ('admin', 'admin@naver.com', 'password', 'MEMBER', 0);
 
 insert into category(name, description, color, image_url, deleted)
 values ('디지털/가전', '가전설명', '#888888',

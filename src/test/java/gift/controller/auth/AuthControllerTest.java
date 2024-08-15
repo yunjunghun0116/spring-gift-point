@@ -44,7 +44,7 @@ class AuthControllerTest {
         //given
         var postRequest = post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new RegisterRequest("test@hello", "testPassword")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("test", "test@hello", "testPassword")));
         //when
         var result = mockMvc.perform(postRequest).andReturn();
         //then
@@ -59,7 +59,7 @@ class AuthControllerTest {
         //given
         var postRequest = post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new RegisterRequest("test@naver.com", "잘못된패스워드")));
+                .content(objectMapper.writeValueAsString(new RegisterRequest("test", "test@naver.com", "잘못된패스워드")));
         //when
         var result = mockMvc.perform(postRequest).andReturn();
         //then
@@ -102,7 +102,7 @@ class AuthControllerTest {
     @DisplayName("정상적으로 회원가입 후 잘못된 패스워드로 로그인 요청하기")
     void failLoginWithWrongPassword() throws Exception {
         //given
-        var auth = authService.register(new RegisterRequest("test@naver.com", "testPassword"));
+        var auth = authService.register(new RegisterRequest("test", "test@naver.com", "testPassword"));
         var postRequest = post("/api/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("test@naver.com", "testPasswordWrong")));
@@ -120,7 +120,7 @@ class AuthControllerTest {
     @DisplayName("정상적으로 회원가입 후 로그인 요청하기")
     void successLogin() throws Exception {
         //given
-        var auth = authService.register(new RegisterRequest("test@naver.com", "testPassword"));
+        var auth = authService.register(new RegisterRequest("test", "test@naver.com", "testPassword"));
         var postRequest = post("/api/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new LoginRequest("test@naver.com", "testPassword")));
